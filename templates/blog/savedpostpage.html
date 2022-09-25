@@ -1,0 +1,63 @@
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Favourite Post</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+</head>
+<header class="header text-center text-white" style="background-image: linear-gradient(-225deg, #5D9FFF 0%, #B8dCFF 48%, #6BBBFF 100%);">
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h1> Saved Blog Post</h1>
+                <p class="lead-2 opacity-90 mt-6">Welcome to your saved feed!!!</p>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<body>
+    <main class="main-content">
+        <div class="section bg-gray">
+            <div class="container">
+
+                    <div class="row">
+                        <div class="container">
+                            <div class="row">
+                                
+                                <div class="col-md-8 col-xl-9" >
+                                    <div class="row">
+                                        <div class="row">
+                                            {% for post in post%}
+                                            <div class="card border hover-shadow-3 mb-6 d-block mt-4 border-0"  style="width: 25rem;">
+                                                {% if post.image %}
+                                                <a href="#">
+                                                    <img src="{{ post.image.url}}" alt="Card-image cap" class="img-fluid">
+                                                </a>
+                                                {% endif %}
+                                                <div class="p-6 text-center" sttyle="padding-bottom: 48px;" >
+                                                    
+                                                    <h5 class="mb-0"><a href="" class="text-dark" style="text-decoration:none">{{post.caption}}</a></h5>
+                                                </div>
+                                            </div>
+                                            {% endfor%}
+                                        
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+               
+    
+            </div>
+        </div>
+    </main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+</body>
