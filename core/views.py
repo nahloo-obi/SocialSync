@@ -11,9 +11,15 @@ from itertools import chain
 import random
 from django.db.models import Q
 from .forms import CommentForm
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
+
+
+tokenizer_distilbert = AutoTokenizer.from_pretrained('core/models/model_directory')
+distilbertmodel = AutoModelForSequenceClassification.from_pretrained("core/models/model_directory")
 
 class IndexPage(LoginRequiredMixin, ListView):
+    login_url = '/signin'
     template_name = 'blog/index2.html'
     context_object_name = 'Profile'
     
@@ -85,6 +91,8 @@ class IndexPage(LoginRequiredMixin, ListView):
     
 
 class Search(LoginRequiredMixin, View):
+    login_url = '/signin'
+
     def post(self, *args, **kwargs):
         user_object = User.objects.get(username=self.request.user.username)
         user_profile = Profiles.objects.get(user=user_object)
@@ -112,7 +120,7 @@ class Search(LoginRequiredMixin, View):
         
     
     
-    
+
 @login_required(login_url='signin')    
 def like_post(request):
     username = request.user.username
@@ -167,7 +175,8 @@ def display_saved_post(request):
     
     
 class ProfilePage(LoginRequiredMixin, DetailView):
-    
+    login_url = '/signin'
+
     template_name = 'blog/profile.html'
     
     
