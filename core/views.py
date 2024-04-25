@@ -12,11 +12,12 @@ import random
 from django.db.models import Q
 from .forms import CommentForm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+#from celery import shared_task
+import threading
 
 
-
-tokenizer_distilbert = AutoTokenizer.from_pretrained('core/models/model_directory')
-distilbertmodel = AutoModelForSequenceClassification.from_pretrained("core/models/model_directory")
+tokenizer_distilbert = AutoTokenizer.from_pretrained('distilbert-base-uncased')
+distilbertmodel = AutoModelForSequenceClassification.from_pretrained("core/models/models_directory")
 
 class IndexPage(LoginRequiredMixin, ListView):
     login_url = '/signin'
@@ -192,7 +193,6 @@ class ProfilePage(LoginRequiredMixin, DetailView):
         user_profile = Profiles.objects.get(user=user_object)
         user_posts = Post.objects.filter(user=self.kwargs['pk'])
         user_post_length = len(user_posts)
-        #print(user_profile)
         
         follower = self.request.user.username
         user = self.kwargs['pk']
@@ -349,8 +349,18 @@ def upload(request):
     else:
         return redirect("/")
     
-    
-def postOverview(request, pk):
+#@shared_task
+def your_task(arg1, arg2):
+
+    result = arg1 + arg2
+    # Perform your task logic here
+    # For example:
+    print("Task completed after 5 seconds of delay.")
+    print(result)
+    return result
+
+
+def postOverview(request, pk, sentimentContext={}):
     form = CommentForm()
     post = Post.objects.get(id=pk)
     comment = Comment.objects.filter(post=pk)
@@ -361,7 +371,8 @@ def postOverview(request, pk):
         "posts_comments" : comment,
         'posts_comments_count': comment_count
     }
-    
+    context.update(sentimentContext)
+
     if request.method=='POST':
         form = CommentForm(request.POST or None)
         if form.is_valid():
@@ -375,6 +386,31 @@ def postOverview(request, pk):
             comment.save()
             
             return redirect(request.path)
-            
+    #your_task.apply_async(args=[4, 9])
+    threading.Thread(target=your_task, args=(4, 5)).start()
+
+
     
     return render(request, 'blog/post.html', context)
+
+def postCommentSentiment(request):
+    post_id = request.GET.get('post_id')
+
+    form = CommentForm()
+    post = Post.objects.get(id=post_id)
+    comment = Comment.objects.filter(post=post_id)
+    comment_count = Comment.objects.filter(post=post_id).count()
+    context = {
+        "form": form,
+        "post": post,
+        "posts_comments" : comment,
+        'posts_comments_count': comment_count
+    }
+    
+    response = postOverview(request,post_id,context)
+
+
+    return response
+
+
+
