@@ -12,8 +12,10 @@ import random
 from django.db.models import Q
 from .forms import CommentForm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-#from celery import shared_task
 import threading
+import torch
+import time
+
 
 
 tokenizer_distilbert = AutoTokenizer.from_pretrained('distilbert-base-uncased')
@@ -349,15 +351,38 @@ def upload(request):
     else:
         return redirect("/")
     
-#@shared_task
-def your_task(arg1, arg2):
+def checkCommentSentiment(comment, v):
+    text = comment.content
+    print(f'comment is this {text }')
 
-    result = arg1 + arg2
-    # Perform your task logic here
-    # For example:
-    print("Task completed after 5 seconds of delay.")
-    print(result)
-    return result
+    tokenized_texts = tokenizer_distilbert(text, padding=True, truncation=True, return_tensors='pt')
+
+    with torch.no_grad():
+        outputs = distilbertmodel(**tokenized_texts)
+        predictions = torch.argmax(outputs.logits, dim=1)
+
+        # Convert predictions to labels
+        # (This step depends on the specific task and dataset)
+    sentiment = 1 if predictions.item() == 1 else 0
+    id = comment.id
+    print(f'sentiment score {sentiment }')
+
+    print(f'is is this {id }')
+
+    if sentiment == 1:
+        comment.sentiment = sentiment
+        comment.save()
+        print(f'sentiment 1 saved {comment.sentiment}')
+    
+    if sentiment == 0 :
+        comment.sentiment = sentiment
+        comment.save()
+        print(f'sentiment 0 saved {comment.sentiment}')
+    
+
+    print("here")
+    
+    
 
 
 def postOverview(request, pk, sentimentContext={}):
@@ -384,13 +409,12 @@ def postOverview(request, pk, sentimentContext={}):
                 
             )
             comment.save()
-            
+
+            #your_task.apply_async(args=[4, 9])
+            threading.Thread(target=checkCommentSentiment, args=(comment, 6)).start()
+        
             return redirect(request.path)
-    #your_task.apply_async(args=[4, 9])
-    threading.Thread(target=your_task, args=(4, 5)).start()
 
-
-    
     return render(request, 'blog/post.html', context)
 
 def postCommentSentiment(request):

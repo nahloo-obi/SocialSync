@@ -6,7 +6,7 @@
 
 {%  include  'blog/header.html' %}
 
-<body>
+<body >
 
     <header>
         <div class="header_inner">
@@ -128,7 +128,7 @@
 
                     <!-- left sidebar-->
                     
-                    <div class="space-y-5 flex-shrink-0 lg:w-7/12">
+                    <div class="space-y-5 flex-shrink-0 lg:w-7/12" >
 
                        <!-- post 1-->
                        {% for post  in posts reversed%}
@@ -209,7 +209,7 @@
                                
 
                                <P>
-                                   <a href="/profile/{{post.user}}"><strong>{{post.user}}</strong></a> {{post.caption}} 
+                                   <a href="/profile/{{post.user}}"><strong>{{post.user}}</strong></a> {{post.caption|safe|truncatechars:200}} 
                                </p>
 
    
