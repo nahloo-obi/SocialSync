@@ -14,7 +14,6 @@ from .forms import CommentForm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import threading
 import torch
-import time
 
 
 
@@ -84,7 +83,29 @@ class IndexPage(LoginRequiredMixin, ListView):
             username_profile_list.append(profile_lists)
         
         suggestions_username_profile_list = list(chain(*username_profile_list))
-    
+
+        sentiment_counts_per_post = {}
+
+        for post in feed_list:
+            post_comment = post.post_comment.all().count()
+            positive_sentiment_count = post.post_comment.filter(sentiment=1).count()
+            negative_sentiment_count = post.post_comment.filter(sentiment=0).count()
+
+            if post_comment > 0:
+                if positive_sentiment_count > negative_sentiment_count:
+                    sentiment_counts_per_post[post.user] = "Post fosters positive engagement!!"  
+                elif negative_sentiment_count < positive_sentiment_count:
+                    sentiment_counts_per_post[post.user] = "Engagement skewed towards Negativity!!" 
+                else:
+                    sentiment_counts_per_post[post.user] = "Engagement showcases diverse perspectives!!" 
+                        
+                        
+                context['sentiment_counts_per_post'] = sentiment_counts_per_post
+
+
+
+                
+        print(f'all comments {post_comment}')
        # context["user_profile"] = self.user_profile
         context["posts"]= feed_list
         context['suggestions_username_profile_list']= suggestions_username_profile_list[:4]
@@ -351,41 +372,30 @@ def upload(request):
     else:
         return redirect("/")
     
-def checkCommentSentiment(comment, v):
-    text = comment.content
-    print(f'comment is this {text }')
 
+def checkCommentSentiment(comment, post):
+    text = comment.content
+
+    #tokenized the comments 
     tokenized_texts = tokenizer_distilbert(text, padding=True, truncation=True, return_tensors='pt')
 
     with torch.no_grad():
+        #feed the tokenizex text to the distilbert model for inference
         outputs = distilbertmodel(**tokenized_texts)
+        #get predictions
         predictions = torch.argmax(outputs.logits, dim=1)
 
-        # Convert predictions to labels
-        # (This step depends on the specific task and dataset)
     sentiment = 1 if predictions.item() == 1 else 0
-    id = comment.id
-    print(f'sentiment score {sentiment }')
-
-    print(f'is is this {id }')
-
+    #save sentiment value to the database
     if sentiment == 1:
         comment.sentiment = sentiment
         comment.save()
-        print(f'sentiment 1 saved {comment.sentiment}')
     
     if sentiment == 0 :
         comment.sentiment = sentiment
         comment.save()
-        print(f'sentiment 0 saved {comment.sentiment}')
-    
-
-    print("here")
-    
-    
-
-
-def postOverview(request, pk, sentimentContext={}):
+        
+def postOverview(request, pk, sentimentContext={}, swap = {}):
     form = CommentForm()
     post = Post.objects.get(id=pk)
     comment = Comment.objects.filter(post=pk)
@@ -394,9 +404,8 @@ def postOverview(request, pk, sentimentContext={}):
         "form": form,
         "post": post,
         "posts_comments" : comment,
-        'posts_comments_count': comment_count
-    }
-    context.update(sentimentContext)
+        'posts_comments_count': comment_count,
+        }
 
     if request.method=='POST':
         form = CommentForm(request.POST or None)
@@ -404,37 +413,62 @@ def postOverview(request, pk, sentimentContext={}):
             comment = Comment(
                 user= request.user,
                 content = request.POST['content'],
-                post = post,
-                
+                post = post
                 
             )
             comment.save()
 
-            #your_task.apply_async(args=[4, 9])
             threading.Thread(target=checkCommentSentiment, args=(comment, 6)).start()
         
-            return redirect(request.path)
+            return redirect(request.path + '#comments_path')
+    
+    
+    if swap:
+        context['sentiment_redirect'] = True 
 
+        context.update(sentimentContext)
+
+        return render(request, 'blog/post.html', context)
+
+    context.update(sentimentContext)
     return render(request, 'blog/post.html', context)
+    
 
-def postCommentSentiment(request):
-    post_id = request.GET.get('post_id')
+def postCommentSentiment(request, pk):
 
-    form = CommentForm()
-    post = Post.objects.get(id=post_id)
-    comment = Comment.objects.filter(post=post_id)
-    comment_count = Comment.objects.filter(post=post_id).count()
-    context = {
-        "form": form,
-        "post": post,
-        "posts_comments" : comment,
-        'posts_comments_count': comment_count
+    post_id = pk
+    optionValue = request.GET.get('comments_value')
+
+    if int(optionValue) == 1:
+
+        comment = Comment.objects.filter(post=post_id, sentiment=1)
+        context = {
+            "posts_comments" : comment
+
+        }
+
+    if int(optionValue) == 0:
+
+        comment = Comment.objects.filter(post=post_id, sentiment=0)
+        context = {
+            "posts_comments" : comment  
+        } 
+    
+
+    if int(optionValue) == 2:
+
+        comment = Comment.objects.filter(post=post_id)
+        context = {
+            "posts_comments" : comment
+        } 
+
+
+    swap = {
+        "redirecting" : True
     }
     
-    response = postOverview(request,post_id,context)
-
-
+    response = postOverview(request,post_id,context, swap)
+    
     return response
-
 
 

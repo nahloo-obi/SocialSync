@@ -33,17 +33,19 @@
             <div class="container">
                 <!-- <h2>Comments({{posts_comments_count}})</h2> -->
                 
-                <form id="comments_form" action="" method="GET">
+                <form id="comments_form" action="{% url 'sentiment-comments' post.id %}" method="GET">
                     <h2>Comments
-                        <select id="comments_dropdown" name="comments_count" onchange="submitForm()"style="font-size: 16px;">
-                            <option value="2">All Comments</option>
+                        <select id="comments_dropdown" name="comments_value" onchange="submitForm()"style="font-size: 16px;">
+                            <option value="3">Filter Comments</option>
                             <option value="1">Positive Comments</option>
                             <option value="0">Negative Comments</option>
+                            <option value="2">All Comments</option>
+
                         </select>
                     </h2>
                 </form>
                 
-                <div class="col-lg-8 mx-auto">
+                <div id="comments_path" class="col-lg-8 mx-auto">
                    
                     <div class="media-list">
                         {% for comment in posts_comments%}
@@ -88,5 +90,19 @@
         document.getElementById("comments_form").submit();
     }
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        // Check if we need to scroll to the comments section
+
+        var getSentimentComments = "{{ sentiment_redirect }}";
+        if (getSentimentComments === "True") {
+            var commentsSection = document.getElementById("comments_form");
+            if (commentsSection) {
+                commentsSection.scrollIntoView();
+            }
+        }
+    });
+    </script>
 </body>
 

@@ -11,6 +11,7 @@ urlpatterns = [
     path('search', Search.as_view(), name="search"),
     path('profile/<str:pk>', ProfilePage.as_view(), name="profile"),
     path('post/<str:pk>', views.postOverview, name="post"),
+    path('sentiment-comments/<str:pk>', views.postCommentSentiment, name="sentiment-comments"),
     path('save-post/<str:pk>', views.save_post, name="save-post"),
     path('like-post', views.like_post, name="like-post"),
     path('display-saved-post', views.display_saved_post, name="display-saved-post"),

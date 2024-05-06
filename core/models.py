@@ -34,7 +34,7 @@ class Post(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
-    post = models.ForeignKey('Post', on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name="post_comment")
     content = models.TextField()
     sentiment = models.IntegerField(default=None, blank=True, null=True)
     
