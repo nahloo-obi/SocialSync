@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 class Profiles(models.Model):
-    user  = models.ForeignKey(User, on_delete=models.CASCADE)
+    user  = models.ForeignKey(User, on_delete=models.CASCADE, related_name="account_user")
     id_user = models.IntegerField()
     bio = models.TextField(blank=True)
     profileimg = models.ImageField(upload_to='profile_images', default='book-icon.png')

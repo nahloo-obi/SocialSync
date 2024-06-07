@@ -11,14 +11,15 @@ from itertools import chain
 import random
 from django.db.models import Q
 from .forms import CommentForm
+
+
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import threading
 import torch
 
-
-
 tokenizer_distilbert = AutoTokenizer.from_pretrained('distilbert-base-uncased')
 distilbertmodel = AutoModelForSequenceClassification.from_pretrained("core/models/models_directory")
+
 
 class IndexPage(LoginRequiredMixin, ListView):
     login_url = '/signin'
@@ -29,6 +30,8 @@ class IndexPage(LoginRequiredMixin, ListView):
         try:
             user_object = User.objects.get(username=self.request.user.username)
             user_profile = Profiles.objects.get(user=user_object)
+
+        
         except Profiles.DoesNotExist:
             user_profile= None
         return user_profile
@@ -40,9 +43,7 @@ class IndexPage(LoginRequiredMixin, ListView):
         liked_post_list = []
         
         for likedpost in liked:
-            liked_post_list.append(likedpost.post_id)
-        
-            
+            liked_post_list.append(likedpost.post_id)    
         
         posts = Post.objects.all()
         user_following_list= []
@@ -56,8 +57,6 @@ class IndexPage(LoginRequiredMixin, ListView):
             feed.append(feed_lists)
             
         feed_list = list(chain(*feed))
-       
-        
         
           #user suggestions
         all_users = User.objects.all()
@@ -93,19 +92,15 @@ class IndexPage(LoginRequiredMixin, ListView):
 
             if post_comment > 0:
                 if positive_sentiment_count > negative_sentiment_count:
-                    sentiment_counts_per_post[post.user] = "Post fosters positive engagement!!"  
-                elif negative_sentiment_count < positive_sentiment_count:
+                    sentiment_counts_per_post[post.user] = "Content fosters positive engagement!!"  
+                elif negative_sentiment_count > positive_sentiment_count:
                     sentiment_counts_per_post[post.user] = "Engagement skewed towards Negativity!!" 
                 else:
                     sentiment_counts_per_post[post.user] = "Engagement showcases diverse perspectives!!" 
                         
                         
                 context['sentiment_counts_per_post'] = sentiment_counts_per_post
-
-
-
                 
-        print(f'all comments {post_comment}')
        # context["user_profile"] = self.user_profile
         context["posts"]= feed_list
         context['suggestions_username_profile_list']= suggestions_username_profile_list[:4]
@@ -129,6 +124,7 @@ class Search(LoginRequiredMixin, View):
         username_profile_list=[]
         
         for users in username_object:
+            
             username_profile.append(users.id)
         
         for ids in username_profile:
@@ -375,7 +371,6 @@ def upload(request):
 
 def checkCommentSentiment(comment, post):
     text = comment.content
-
     #tokenized the comments 
     tokenized_texts = tokenizer_distilbert(text, padding=True, truncation=True, return_tensors='pt')
 
@@ -413,21 +408,15 @@ def postOverview(request, pk, sentimentContext={}, swap = {}):
             comment = Comment(
                 user= request.user,
                 content = request.POST['content'],
-                post = post
-                
+                post = post         
             )
             comment.save()
-
+            #perform the concurrent operation
             threading.Thread(target=checkCommentSentiment, args=(comment, 6)).start()
-        
             return redirect(request.path + '#comments_path')
-    
-    
     if swap:
         context['sentiment_redirect'] = True 
-
         context.update(sentimentContext)
-
         return render(request, 'blog/post.html', context)
 
     context.update(sentimentContext)
@@ -435,37 +424,25 @@ def postOverview(request, pk, sentimentContext={}, swap = {}):
     
 
 def postCommentSentiment(request, pk):
-
     post_id = pk
     optionValue = request.GET.get('comments_value')
 
+    #option for positive comments
     if int(optionValue) == 1:
-
         comment = Comment.objects.filter(post=post_id, sentiment=1)
-        context = {
-            "posts_comments" : comment
-
-        }
-
-    if int(optionValue) == 0:
-
-        comment = Comment.objects.filter(post=post_id, sentiment=0)
-        context = {
-            "posts_comments" : comment  
-        } 
+        context = {"posts_comments" : comment}
     
-
+    #option for negative comments
+    if int(optionValue) == 0:
+        comment = Comment.objects.filter(post=post_id, sentiment=0)
+        context = {"posts_comments" : comment} 
+    
+    #option for all comments
     if int(optionValue) == 2:
-
         comment = Comment.objects.filter(post=post_id)
-        context = {
-            "posts_comments" : comment
-        } 
+        context = {"posts_comments" : comment}
 
-
-    swap = {
-        "redirecting" : True
-    }
+    swap = {"redirecting" : True}
     
     response = postOverview(request,post_id,context, swap)
     
