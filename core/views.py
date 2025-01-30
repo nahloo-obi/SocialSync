@@ -23,7 +23,7 @@ distilbertmodel = AutoModelForSequenceClassification.from_pretrained("core/model
 
 class IndexPage(LoginRequiredMixin, ListView):
     login_url = '/signin'
-    template_name = 'blog/index3.html'
+    template_name = 'blog/home.html'
     context_object_name = 'Profile'
     
     def get_queryset(self):

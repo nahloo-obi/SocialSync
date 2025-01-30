@@ -1,0 +1,240 @@
+{% extends 'pages/base.html' %} 
+{% load static %}
+{% load define_action %}
+
+
+
+{% block content %}
+
+
+
+<body>
+    <div class="site-wrapper">
+        <div class="main-overlay"></div>
+        
+        {%  include  'blog/header.html' %}
+        <!-- main content  -->
+
+        <section class="main-content">
+            <div class="container-xl">
+                <div class="row gy-4">
+
+                    <!-- left part 1st section  -->
+                    <div class="col-lg-8">
+
+                       
+
+                        <div class="section-header">
+                            <h3 class="section-title">Posts from Users you follow</h3>
+                        </div>
+
+                        <div class="padding-30 rounded bordered">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-6">
+                                    <!-- post  -->
+                                    {% for post  in posts reversed%}
+                                    <div class="post post-list clearfix">
+                                        <div class="thumb rounded">
+                                            <span class="post-format-sm">
+                                                <i class="icon-picture"></i>
+                                            </span>
+                                            <a href="#">
+                                                <div class="inner">
+                                                    <img src="{{post.image.url}}" alt="" height="700">
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="details">
+                                            <ul class="meta list-inline mb-3">
+                                                <li class="list-inline-item">
+                                                    <a href="/profile/{{post.user}}">
+                                                        <img src="" class="author" alt="">
+                                                        @{{post.user}}
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a href="#">Trending</a>
+                                                </li>
+                                                <li class="list-inline-item">{{post.created_at}}</li>
+                                            </ul>
+                                            <h5 class="post-tile">
+                                                <a href="/post/{{post.id}}">
+                                                   
+                                                        {{post.caption|safe|truncatechars:70}}
+                                                    
+                                                    </a>
+                                            </h5>
+                                           
+                                            {% if sentiment_counts_per_post %}
+                                            
+                                                Users Perspective: {{ sentiment_counts_per_post|hash:post.user }}
+                                            
+                                            {% endif %}
+                                            <div class="post-bottom clearfix d-flex align-items-center">
+                                                <div class="social-share me-auto">
+                                                    <a href="#"><span class="icon-share"></span></a>
+                                                </div>
+                                                
+                                                <div class="more-button float-end">
+                                                    <a href="/like-post?post_id={{post.id}} " class="flex items-center space-x-2">
+                                                        <div class="p-2 rounded-full text-black">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20" height="20" class="">
+                                                                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                                                            </svg>
+                                                            
+                 
+                                                            
+                                                             
+                                                             <!-- {% if post.id|slugify in liked %}
+                                                                 <h1>hey</h1>
+                                                             {% endif %}
+                                                              -->
+                                                            
+                                                        </div>
+                                                        {% if post.no_of_likes == 0%}
+                                                        No Likes
+                                                        {% elif post.no_of_likes == 1 %}
+                                                        {{post.no_of_likes }} like
+                                                        {% else %}
+                                                        {{post.no_of_likes }} likes
+                                                        {% endif %}
+                                                        
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% endfor %}
+                                </div>
+                                
+                                
+                               
+
+                                <div class="text-center">
+                                    <button class="btn btn-simple">Load More</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- left part over here  -->
+                    </div>
+                    <!-- right part starts from here  -->
+
+                    <div class="col-lg-4">
+                        <div class="sidebar">
+                         
+                            <div class="spacer" data-height="100"></div>
+                            <div class="widget rounded">
+                                <div class="widget-header text-center">
+                                    <h3 class="widget-title">Users you can follow!</h3>
+                                </div>
+                                {% for suggestion in suggestions_username_profile_list %}
+
+                                <div class="widget-content">
+                                    <div class="post post-list-sm circle">
+                                        <div class="thumb circle">
+                                            
+                                            <a href="/profile/{{suggestion.user}}">
+                                                <div class="inner">
+                                                    <img src="{{suggestion.profileimg.url}}" alt="">
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="details clearfix">
+                                            <h6 class="post-title my-0">
+                                                <a href="#">{{suggestion.user}}</a>
+                                            </h6>
+                                            <ul class="meta list-inline mt-1 mb-0">
+                                                <li class="list-inline-item">{{suggestion.bio}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                   
+                                    
+                                </div>
+
+                                {%endfor%}
+                            </div>
+
+                    
+                            
+                           
+
+                            
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        
+        <footer>
+            <div class="container-xl">
+                <div class="footer-inner">
+                    <div class="row d-flex align-items-center gy-4">
+                        <div class="col-md-4">
+                            <span class="copyright">&copy; 2021 TC Blogs</span>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <ul class="social-icons list-unstyled list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-pinterest"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-itunes"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" id="return-to-top" class="float-md-end">
+                                <i class="icon-arrow-up"></i>
+                                Back to Top
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+
+
+    </div>
+
+
+
+    <!-- javascripts  -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/slick.min.js' %}"></script>
+    <script src="{% static 'js/jquery.sticky-sidebar.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+{% endblock content %}
