@@ -1,4 +1,4 @@
-{% extends 'pages/base.html' %}
+"{% extends 'pages/base.html' %} 
 {% load static %}
 {% load define_action %}
 
@@ -213,7 +213,7 @@
                                     <p class="text-base text-gray-400 text-center">
                                         <h1>Users Perspective:</h1> {{ sentiment_counts_per_post|hash:post.user }}
                                     </p>
-                                </div>
+                                    </div>
                                     {% endif %}
                                 </div>
                                
@@ -275,6 +275,6 @@
         </div>
 
     </div>
-
+</body>
 
 {% endblock content %}

@@ -1,0 +1,374 @@
+{% extends 'pages/base.html' %} 
+{% load static %}
+{% load define_action %}
+
+
+
+{% block content %}
+
+{%  include  'blog/header.html' %}
+
+<body>
+    <div class="site-wrapper">
+        <div class="main-overlay"></div>
+        <header class="header-default">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-xl">
+                    <!-- logo  -->
+                   <h2>Social Sync</h2>
+
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item dropdown active">
+                                <a href="index.html" class="nav-link dropdown-toggle">Home</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" class="dropdown-item">Fashion</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dropdown-item">Movies</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dropdown-item">Electronic</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dropdown-item">Cricket</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dropdown-item">Technology</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Latest</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Trending</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Contact</a>
+                            </li>
+                        </ul>
+
+                        <form action="/search" method="POST">
+                            {%csrf_token%}
+                        <div class="left-side">
+                            <!-- Logo -->
+                            <div id="logo" class=" uk-hidden@s">
+                                <a href="home.html">
+                                    <b><h1 style="text-transform: uppercase;">Social Blog</h1></b>
+                                </a>
+                            </div>
+            
+            
+                           <!-- <div class="header_search"> -->
+                                <input type="text" name="username" placeholder="Search for username">
+                                <button type="submit"><i class="fa fa-search fa-1x"></i></button>
+                           <!-- </div> -->
+            
+                        </div>
+                        </form>
+                         <!-- buttons  -->
+                         
+                    </div>
+
+                    <!-- right side of header  -->
+                    <div class="header-right">
+                       
+                           <!-- upload -->
+                            <a href="#"
+                            class="bg-pink-500 flex font-bold hidden hover:bg-pink-600 hover:text-white inline-block items-center lg:block max-h-10 mr-4 px-4 py-2 rounded shado text-white">
+                            <ion-icon name="add-circle" class="-mb-1
+                            mr-1 opacity-90 text-xl uilus-circle"></ion-icon> Upload Post
+                            </a>
+                           
+                            <!-- upload dropdown box -->
+                            <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small" class="header_dropdown">
+
+                                <!-- notivication header -->
+                                <div class="px-4 py-3 -mx-5 -mt-4 mb-5 border-b">
+                                    <h4>Upload Pics</h4>
+                                </div>
+
+                                <!-- notification contents -->
+                                
+                                <div class="flex justify-center flex-center text-center">
+
+                                    <div class="flex flex-col choose-upload text-center">
+                                    
+                                        <div class="bg-gray-100 border-2 border-dashed flex flex-col h-24 items-center justify-center relative w-full rounded-lg  ">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
+                                                <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                                                <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                                            </svg>
+                                        </div> 
+
+                                        <form action="upload" method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                            <p class="my-3 leading-6"> Upload pics
+                                        </p>
+                                        <div>
+                                            <input type="file" name="image_upload">
+                                        <!--   <a href="#" class="button soft-warning small"> Choose file</a> -->
+                                        <textarea class="button soft-warning small" name="caption" placeholder="caption....."> </textarea>
+                                        <br>
+                                        <button class="bg-blue-700" type="submit"> Upload </button>
+                                        </div>
+                                        </form>
+                                        
+                                    </div>
+
+                                    <div class="uk-flex uk-flex-column choose-upload" hidden>
+                                        <div class="mx-auto flex flex-col h-24 items-center justify-center relative w-full rounded-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
+                                                <path fill-rule="evenodd" d="M2 9.5A3.5 3.5 0 005.5 13H9v2.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 15.586V13h2.5a4.5 4.5 0 10-.616-8.958 4.002 4.002 0 10-7.753 1.977A3.5 3.5 0 002 9.5zm9 3.5H9V8a1 1 0 012 0v5z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <p class="my-3 leading-6"> Import videos from YouTube <br> Copy / Paste your video link here </p>
+                                        <form class="uk-grid-small" uk-grid>
+                                            <div class="uk-width-expand">
+                                                <input type="text" class="uk-input uk-form-small  bg-gray-200 " style="box-shadow:none" placeholder="Paste link">
+                                            </div>
+                                            <div class="uk-width-auto"> <button type="submit" class="button soft-warning -ml-2">
+                                                    Import </button> </div>
+                                        </form>
+                                        <a href="#" class="uk-text-muted mt-3 uk-link"
+                                            uk-toggle="target: .choose-upload ; animation: uk-animation-slide-left-small, uk-animation-slide-right-medium; queued: true">
+                                            Or Upload Video </a>
+                                    </div>
+
+                                </div>
+                                
+                                <div class="px-4 py-3 -mx-5 -mb-4 mt-5 border-t text-sm">
+                                    Your image size Must be Maxmium 99MB
+                                </div>
+                            </div>
+                    </div>        
+                    
+                </div>
+            </nav>
+
+
+        </header>
+
+        <!-- main content  -->
+
+        <section class="main-content">
+            <div class="container-xl">
+                <div class="row gy-4">
+
+                    <!-- left part 1st section  -->
+                    <div class="col-lg-8">
+
+                       
+
+                        <div class="section-header">
+                            <h3 class="section-title">Posts from Users you follow</h3>
+                        </div>
+
+                        <div class="padding-30 rounded bordered">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-6">
+                                    <!-- post  -->
+                                    {% for post  in posts reversed%}
+                                    <div class="post post-list clearfix">
+                                        <div class="thumb rounded">
+                                            <span class="post-format-sm">
+                                                <i class="icon-picture"></i>
+                                            </span>
+                                            <a href="#">
+                                                <div class="inner">
+                                                    <img src="{{post.image.url}}" alt="" height="700">
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="details">
+                                            <ul class="meta list-inline mb-3">
+                                                <li class="list-inline-item">
+                                                    <a href="/profile/{{post.user}}">
+                                                        <img src="" class="author" alt="">
+                                                        @{{post.user}}
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a href="#">Trending</a>
+                                                </li>
+                                                <li class="list-inline-item">26 May 2021</li>
+                                            </ul>
+                                            <h5 class="post-tile">
+                                                <a href="/post/{{post.id}}">
+                                                   
+                                                        {{post.caption|safe|truncatechars:100}}
+                                                    
+                                                    </a>
+                                            </h5>
+                                           
+                                            {% if sentiment_counts_per_post %}
+                                            
+                                                Users Perspective: {{ sentiment_counts_per_post|hash:post.user }}
+                                            
+                                            {% endif %}
+                                            <div class="post-bottom clearfix d-flex align-items-center">
+                                                <div class="social-share me-auto">
+                                                    <button class="toggle-button icon-share"></button>
+                                                    <ul class="icons list-unstyled list-inline mb-0">
+                                                        <li class="list-inline-item">
+                                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="#"><i class="fab fa-twitter"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="#"><i class="fab fa-pinterest"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="#"><i class="far fa-envelope"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="more-button float-end">
+                                                    <a href="#"><span class="icon-options"></span></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% endfor %}
+                                </div>
+                                
+                                
+                               
+
+                                <div class="text-center">
+                                    <button class="btn btn-simple">Load More</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- left part over here  -->
+                    </div>
+                    <!-- right part starts from here  -->
+
+                    <div class="col-lg-4">
+                        <div class="sidebar">
+                         
+                            <div class="spacer" data-height="100"></div>
+                            <div class="widget rounded">
+                                <div class="widget-header text-center">
+                                    <h3 class="widget-title">Users you can follow!</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <div class="post post-list-sm circle">
+                                        <div class="thumb circle">
+                                            <span class="number">1</span>
+                                            <a href="#">
+                                                <div class="inner">
+                                                    <img src="images/posts/tabs-1.jpg" alt="">
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="details clearfix">
+                                            <h6 class="post-title my-0">
+                                                <a href="#">Bitcoin price raise after sudden fall</a>
+                                            </h6>
+                                            <ul class="meta list-inline mt-1 mb-0">
+                                                <li class="list-inline-item">30 May 2021</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                   
+                                    
+                                </div>
+                            </div>
+
+                    
+                            
+                           
+
+                            
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        
+        <footer>
+            <div class="container-xl">
+                <div class="footer-inner">
+                    <div class="row d-flex align-items-center gy-4">
+                        <div class="col-md-4">
+                            <span class="copyright">&copy; 2021 TC Blogs</span>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <ul class="social-icons list-unstyled list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-pinterest"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-itunes"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="#">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" id="return-to-top" class="float-md-end">
+                                <i class="icon-arrow-up"></i>
+                                Back to Top
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+
+
+    </div>
+
+
+
+    <!-- javascripts  -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/slick.min.js' %}"></script>
+    <script src="{% static 'js/jquery.sticky-sidebar.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+{% endblock content %}
