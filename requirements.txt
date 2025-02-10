@@ -34,7 +34,7 @@ six==1.16.0
 sqlparse==0.5.0
 sympy==1.12
 tokenizers==0.19.1
-torch==2.2.2
+torch==2.2.0
 torchvision==0.17.2
 tqdm==4.66.2
 transformers==4.40.0
