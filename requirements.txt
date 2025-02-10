@@ -24,6 +24,7 @@ numpy==1.26.4
 packaging==24.0
 pillow==10.3.0
 prompt-toolkit==3.0.43
+psycopg2==2.9.10
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 PyYAML==6.0.1
