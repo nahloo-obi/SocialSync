@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,11 +78,39 @@ WSGI_APPLICATION = 'socialblog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+DB_NAME = os.environ.get("DB_NAME")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_HOST = os.environ.get("DB_HOST")
+DB_PORT = os.environ.get("DB_PORT")
+
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
+else:
+    DATABASES = {
+    
+       'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASS,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT
+    }
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }
 
 
