@@ -10,35 +10,23 @@
                     <li class="nav-item dropdown active">
                         <a href="/" class="nav-link dropdown-toggle">Home</a>
                         <ul class="dropdown-menu">
+                           
                             <li>
-                                <a href="#" class="dropdown-item">Fashion</a>
+                                <a href="{% url 'settings'%}" class="dropdown-item ">Profile Settings</a>
                             </li>
                             <li>
-                                <a href="#" class="dropdown-item">Movies</a>
+                                <a href="{% url 'logout'%}" class="dropdown-item ">Logout</a>
                             </li>
-                            <li>
-                                <a href="#" class="dropdown-item">Electronic</a>
-                            </li>
-                            <li>
-                                <a href="#" class="dropdown-item">Cricket</a>
-                            </li>
-                            <li>
-                                <a href="#" class="dropdown-item">Technology</a>
-                            </li>
+                            
 
                         </ul>
                     </li>
+                    
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Latest</a>
+                        <a href="/about" class="nav-link">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Trending</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Contact</a>
+                        <a href="{% url 'contact_us' %}" class="nav-link">Contact Us</a>
                     </li>
                 </ul>
 
@@ -47,7 +35,7 @@
                 <div class="left-side">
                     <!-- Logo -->
                     <div id="logo" class=" uk-hidden@s">
-                        <a href="home.html">
+                        <a href="/">
                             <b><h1 style="text-transform: uppercase;">Social Blog</h1></b>
                         </a>
                     </div>
@@ -55,7 +43,8 @@
     
                    <!-- <div class="header_search"> -->
                         <input type="text" name="username" placeholder="Search for username">
-                        <button type="submit"><i class="fa fa-search fa-1x"></i></button>
+                        <button type="submit"><i class="fa fa-search fa-1x"></i></button> 
+                        
                    <!-- </div> -->
     
                 </div>
@@ -66,7 +55,7 @@
 
             <!-- right side of header  -->
             <div class="header-right">
-               
+                    
                    <!-- upload -->
                     <a href="#"
                     class="bg-pink-500 flex font-bold hidden hover:bg-pink-600 hover:text-white inline-block items-center lg:block max-h-10 mr-4 px-4 py-2 rounded shado text-white">
@@ -78,9 +67,7 @@
                     <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small" class="header_dropdown">
 
                         <!-- notivication header -->
-                        <div class="px-4 py-3 -mx-5 -mt-4 mb-5 border-b">
-                            <h4>Upload Pics</h4>
-                        </div>
+                      
 
                         <!-- notification contents -->
                         
@@ -97,14 +84,17 @@
 
                                 <form action="upload" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                    <p class="my-3 leading-6"> Upload pics
+                                    <p class="my-3 leading-6"> Upload Blog picture
                                 </p>
                                 <div>
                                     <input type="file" name="image_upload">
+                                    <br>
+                                    <br>
                                 <!--   <a href="#" class="button soft-warning small"> Choose file</a> -->
-                                <textarea class="button soft-warning small" name="caption" placeholder="caption....."> </textarea>
+                                <textarea class="textarea" name="caption" placeholder="caption....." style="background-color: #dddddd; color: #666666; padding: 1em;
+                                border-radius: 10px; border: 2px solid transparent; outline: none; height: 200px; width: 400px;"> </textarea>
                                 <br>
-                                <button class="bg-blue-700" type="submit"> Upload </button>
+                                <button class="btn btn-primary mt-2 rounded" type="submit"> Upload </button>
                                 </div>
                                 </form>
                                 

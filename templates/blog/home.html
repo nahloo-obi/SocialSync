@@ -22,7 +22,7 @@
                     <!-- left part 1st section  -->
                     <div class="col-lg-8">
 
-                       
+                     
 
                         <div class="section-header">
                             <h3 class="section-title">Posts from Users you follow</h3>
@@ -32,6 +32,7 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-6">
                                     <!-- post  -->
+                                    {%if posts %}
                                     {% for post  in posts reversed%}
                                     <div class="post post-list clearfix">
                                         <div class="thumb rounded">
@@ -106,14 +107,18 @@
                                     </div>
 
                                     {% endfor %}
+                                    {% else %}
+                                    <h5 style="color: grey;">Why not follow some users to see their posts....</h5>
+                                    {%endif%}
                                 </div>
                                 
+                        
                                 
                                
-
+<!-- 
                                 <div class="text-center">
                                     <button class="btn btn-simple">Load More</button>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <!-- left part over here  -->

@@ -62,3 +62,13 @@ class FollowerCount(models.Model):
     
     def __str__(self):
         return self.user
+    
+class ContactUs(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=11)
+    text = models.TextField()
+
+    
+    def __str__(self):
+        return self.name

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User, auth
 from django.views.generic import View, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from .models import Profiles, Post, LikePost, FollowerCount, Comment, SavePost
+from .models import Profiles, Post, LikePost, FollowerCount, Comment, SavePost, ContactUs
 from django.contrib.auth.decorators import login_required
 from itertools import chain
 import random
@@ -108,18 +108,42 @@ class IndexPage(LoginRequiredMixin, ListView):
         
         return context
     
+def about(request):
+   
+    return render(request, "blog/about_us.html")
+
+def contact_us(request):
+    try:
+        if request.method == "POST":
+            name = request.POST.get("name")
+            email = request.POST.get("email")
+            phone = request.POST.get("phone")
+            message = request.POST.get("message")
+
+            send_message = ContactUs.objects.create(name=name, email=email, phone_number=phone, text=message)
+            messages.success(request, "Message Sent Successfully!!!!" )
+            return redirect("contact_us")
+
+    except:
+        messages.info(request, "An error occured try again later.")            
+        return redirect("contact_us")
+
+        
+
+
+    return render(request, "blog/contact_us.html")
 
 class Search(LoginRequiredMixin, View):
     login_url = '/signin'
 
     def post(self, *args, **kwargs):
-        user_object = User.objects.get(username=self.request.user.username)
-        user_profile = Profiles.objects.get(user=user_object)
+        # user_object = User.objects.get(username=self.request.user.username)
+        # user_profile = Profiles.objects.filter(user=user_object)
         context = {}
         
         username = self.request.POST['username']
         username_object = User.objects.filter(Q(username__icontains=username))
-        
+
         username_profile = []
         username_profile_list=[]
         
@@ -133,7 +157,7 @@ class Search(LoginRequiredMixin, View):
             
             
         username_profile_list = list(chain(*username_profile_list))
-        context['user_profile']=user_profile
+        context['username'] = username
         context['username_profile_list'] = username_profile_list
         
         return render(self.request, 'blog/search.html', context)  

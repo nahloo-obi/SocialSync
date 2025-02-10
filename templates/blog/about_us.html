@@ -1,0 +1,50 @@
+{% extends 'pages/base.html' %} 
+{% load static %}
+
+{% block content %}
+
+    <body>
+        {% include 'blog/header.html' %}
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('./static/assets/images/post/img1.jpg'); height: 250px;">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <br>
+                        <br>
+                        <div class="site-heading">
+                            <h1 style="text-align: center; color: white;">About SocialSync</h1>
+                            <h5 style="text-align: center; color: white;">The best platform to build your network.</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+      </header>
+<br>
+<br>
+<br>
+
+        <!-- Main Content-->
+        <main class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <p>Welcome to SocialSync, the next-generation social networking platform designed to bring people closer, foster meaningful connections, and create a vibrant digital community. Whether you're here to stay in touch with friends, share your thoughts, or discover new interests, we provide a seamless and engaging experience tailored to you.
+
+                            At SocialSync, we believe in the power of authentic interactions. Our platform is built around real conversations, interactive content, and a personalized feed that evolves with your interests. Share photos, videos, and stories, engage in discussions, or join communities that align with your passions.
+                            
+                            Our mission is simple: to make social networking more meaningful, secure, and enjoyable. Unlike traditional platforms, we prioritize user privacy and control. You decide what you share, with whom, and how your content is seen. Our advanced security features ensure that your data is protected while offering tools to customize your experience.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Footer-->
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+
+
+{% endblock content %}
